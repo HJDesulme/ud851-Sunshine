@@ -71,14 +71,14 @@ public final class NetworkUtils {
         // COMPLETED (1) Fix this method to return the URL used to query Open Weather Map's API
         Uri forcastUri = Uri.parse(DYNAMIC_WEATHER_URL).buildUpon().appendQueryParameter(QUERY_PARAM, locationQuery).build();
 
+        URL forcastURL = null;
         try {
-            URL forcastURL = new URL(forcastUri.toString());
-            return forcastURL;
+            forcastURL = new URL(forcastUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return forcastURL;
     }
 
     /**
