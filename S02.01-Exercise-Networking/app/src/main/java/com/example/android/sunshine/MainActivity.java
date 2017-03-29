@@ -22,6 +22,9 @@ import android.widget.TextView;
 
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.utilities.NetworkUtils;
+import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -86,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     // COMPLETED (5) Create a class that extends AsyncTask to perform network requests
-    public class NetworkQueryTask extends AsyncTask<URL, Void, String> {
+    public class NetworkQueryTask extends AsyncTask<URL, Void, String[]> {
 
         // COMPLETED (6) Override the doInBackground method to perform your network requests
         @Override
-        protected String doInBackground(URL... urls) {
+        protected String[] doInBackground(URL... urls) {
 
             String weatherResults = null;
 
@@ -100,13 +103,24 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return weatherResults;
+            String[] weatherResultsArray = null;
+
+            try {
+                weatherResultsArray = OpenWeatherJsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this, weatherResults);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return weatherResultsArray;
         }
 
         // COMPLETED (7) Override the onPostExecute method to display the results of the network request
         @Override
-        protected void onPostExecute(String weatherResults) {
-            mWeatherTextView.setText(weatherResults);
+        protected void onPostExecute(String[] weatherResultsArray) {
+
+            for (String weatherDay : weatherResultsArray) {
+                mWeatherTextView.append(weatherDay + "\n\n\n");
+            }
         }
     }
 
